@@ -1,0 +1,30 @@
+dataset:
+  name: mnist
+  batch_size: 16
+  test_workers: 1
+  workers: 4
+
+model:
+  name: MLP_naivetp
+  kwargs:
+    channels: [784, 240, 240, 240, 240, 240, 240, 10]
+
+train:
+  lr: 0.00005
+  epoch: 50
+  tp: True
+  losses_map: 
+    forward_layer1: [[1], []]
+    forward_layer2: [[2], []]
+    forward_layer3: [[3], []]
+    forward_layer4: [[4], []]
+    forward_layer5: [[5], []]
+    forward_layer6: [[6], []]
+    forward_layer7: [[7], []]
+    autoencoder_layer1: [[2], [1]]
+    autoencoder_layer2: [[3], [2]]
+    autoencoder_layer3: [[4], [3]]
+    autoencoder_layer4: [[5], [4]]
+    autoencoder_layer5: [[6], [5]]
+    autoencoder_layer6: [[7], [6]]
+  log_step: 500

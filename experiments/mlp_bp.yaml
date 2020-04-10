@@ -1,0 +1,18 @@
+dataset:
+  name: mnist
+  batch_size: 16
+  test_workers: 1
+  workers: 4
+
+model:
+  name: MLP
+  kwargs:
+    channels: [784, 240, 240, 240, 240, 240, 240, 10]
+
+train:
+  lr: 0.05
+  epoch: 50
+  tp: False
+  losses_map: 
+    bp_loss: [[1, 2, 3, 4, 5, 6, 7], []]
+  log_step: 500
