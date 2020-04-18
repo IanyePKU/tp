@@ -5,7 +5,7 @@ dataset:
   workers: 4
 
 model:
-  name: MLP_dtp
+  name: MLP_ddtp
   kwargs:
     channels: [784, 240, 240, 240, 240, 240, 10]
 
@@ -13,13 +13,13 @@ train:
   opt:
     name: Adam
     type: tp
-    blr: 0.000768
-    flr: 0.000757
+    blr: 0.001
+    flr: 0.001
     tlr: 0.001
     kwargs:
       lr: 0.001
       #betas: [0.9, 0.999]
-  exp_info: mlp6_dtp
+  exp_info: mlp6_ddtp
   epoch: 50
   tp: True
   losses_map: 
@@ -31,10 +31,11 @@ train:
     forward_layer6: [[6], []]
     # target_loss: [[6], []]
     # forward_layer7: [[7], []]
-    autoencoder_layer1: [[], [1]]
-    autoencoder_layer2: [[], [2]]
-    autoencoder_layer3: [[], [3]]
-    autoencoder_layer4: [[], [4]]
-    autoencoder_layer5: [[], [5]]
+    # autoencoder_layer1: [[], [1]]
+    autoencoder_layer2: [[], [1, 2]]
+    autoencoder_layer3: [[], [2, 3]]
+    autoencoder_layer4: [[], [3, 4]]
+    autoencoder_layer5: [[], [4, 5]]
+    autoencoder_layer6: [[], [5]]
     # autoencoder_layer6: [[7], [6]]
   log_step: 50

@@ -7,12 +7,19 @@ dataset:
 model:
   name: MLP
   kwargs:
-    channels: [784, 240, 240, 240, 240, 240, 240, 10]
+    channels: [784, 240, 240, 240, 240, 240, 10]
 
 train:
-  lr: 0.05
+  opt:
+    name: Adam
+    type: bp
+    kwargs:
+      lr: 0.001
+      #betas: [0.9, 0.999]
+  exp_info: mlp7-bp
+  lr: 0.001
   epoch: 50
   tp: False
   losses_map: 
-    bp_loss: [[1, 2, 3, 4, 5, 6, 7], []]
+    bp_loss: [[1, 2, 3, 4, 5, 6], []]
   log_step: 500

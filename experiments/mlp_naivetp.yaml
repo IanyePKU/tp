@@ -10,8 +10,9 @@ model:
     channels: [784, 240, 240, 240, 240, 240, 240, 10]
 
 train:
+  exp_info: mlp7_naivetp
   lr: 0.00005
-  epoch: 50
+  epoch: 300
   tp: True
   losses_map: 
     forward_layer1: [[1], []]
@@ -21,10 +22,10 @@ train:
     forward_layer5: [[5], []]
     forward_layer6: [[6], []]
     forward_layer7: [[7], []]
-    autoencoder_layer1: [[2], [1]]
-    autoencoder_layer2: [[3], [2]]
-    autoencoder_layer3: [[4], [3]]
-    autoencoder_layer4: [[5], [4]]
-    autoencoder_layer5: [[6], [5]]
-    autoencoder_layer6: [[7], [6]]
+    autoencoder_layer1: [[], [1]]
+    autoencoder_layer2: [[], [2]]
+    autoencoder_layer3: [[], [3]]
+    autoencoder_layer4: [[], [4]]
+    autoencoder_layer5: [[], [5]]
+    autoencoder_layer6: [[], [6]]
   log_step: 500

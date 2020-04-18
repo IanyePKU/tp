@@ -12,7 +12,8 @@ from torch.utils.data import DataLoader
 import yaml
 from easydict import EasyDict
 import copy
-
+from tensorboardX import SummaryWriter
+from utils.utils import *
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -46,8 +47,9 @@ def set_grad_zero(model):
 def train(model, data_loader, cfg):
 	print("start training!!!")
 	print(model)
-	opt = torch.optim.SGD(model.parameters(), lr=cfg.lr)
-
+	opt = get_opt(cfg.opt, model)
+	exp_info = f"{cfg.exp_info}-lr{cfg.opt.kwargs.lr}"
+	writer = SummaryWriter(f"log/{exp_info}")
 	model.train()
 	last_iter = 0
 	for epoch in range(cfg.epoch):
@@ -60,18 +62,17 @@ def train(model, data_loader, cfg):
 			if cfg.tp:
 				outputs["forward"], targets["forward"] = model.forward_target(images, labels, nn.CrossEntropyLoss())
 				outputs["autoencoder"], targets["autoencoder"] = model.autoencoder(images)
-				loss_func = nn.MSELoss()
+				outputs["finallayer"], targets["finallayer"] = model.forward(images), labels
+				loss_func = [nn.MSELoss(), nn.CrossEntropyLoss()]
 				losses = get_tp_losses(outputs, targets, loss_func)
 			else:
 				loss_func = nn.CrossEntropyLoss()
 				outputs= model.forward(images)
 				losses = get_bp_losses(outputs, labels, loss_func)
 
-			# print(losses)
-			# exit()
-
 			if (last_iter + 1) % cfg.log_step == 0:
-				print(f"epoch: {epoch}, step: {step}, loss: {get_losses_sum(losses)}")
+				print(f"epoch: {epoch}, step: {step}, loss: {get_losses_sum(losses)}, losses: {losses}")
+				writer.add_scalar(f"loss/train", get_losses_sum(losses), global_step=last_iter)
 
 			set_grad_zero(model)
 			set_grad_mul(losses, cfg.losses_map, model)
@@ -89,8 +90,11 @@ def train(model, data_loader, cfg):
 			correct += int(torch.argmax(outputs) == labels.flatten())
 
 		pre = correct / len(data_loader["test"])
+		writer.add_scalar(f"acc", pre, global_step=epoch)
+
 		print(pre)
 
+	writer.close()
 
 def get_dataloader(cfg):
 	root = '../data'
@@ -122,10 +126,10 @@ def get_model(cfg):
 def main():
 	import argparse
 	parser = argparse.ArgumentParser("fsl_name_args")
-	parser.add_argument("--config", type=str, default="./experments/mlp_bp.yaml")
+	parser.add_argument("--config", type=str, default="./experiments/mlp_bp.yaml")
 	args = parser.parse_args()
 
-	# args.config = os.path.join(os.getcwd(), "experiments", "mlp_naivetp.yaml")
+	# args.config = os.path.join(os.getcwd(), "experiments", "mlp_dtp.yaml")
 
 	with open(args.config) as f:
 		config = yaml.load(f)

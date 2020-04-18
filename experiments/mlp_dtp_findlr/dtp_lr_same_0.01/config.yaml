@@ -1,0 +1,63 @@
+dataset:
+  batch_size: 100
+  name: mnist
+  test_workers: 1
+  workers: 4
+model:
+  kwargs:
+    channels:
+    - 784
+    - 240
+    - 240
+    - 240
+    - 240
+    - 240
+    - 10
+  name: MLP_dtp
+train:
+  epoch: 50
+  exp_info: dtp_lr_same_0.01
+  log_step: 50
+  losses_map:
+    autoencoder_layer1:
+    - []
+    - - 1
+    autoencoder_layer2:
+    - []
+    - - 2
+    autoencoder_layer3:
+    - []
+    - - 3
+    autoencoder_layer4:
+    - []
+    - - 4
+    autoencoder_layer5:
+    - []
+    - - 5
+    forward_layer1:
+    - - 1
+    - []
+    forward_layer2:
+    - - 2
+    - []
+    forward_layer3:
+    - - 3
+    - []
+    forward_layer4:
+    - - 4
+    - []
+    forward_layer5:
+    - - 5
+    - []
+    forward_layer6:
+    - - 6
+    - []
+  opt:
+    blr: 0.01
+    flr: 0.01
+    kwargs:
+      lr: 0.001
+    name: Adam
+    tlr: 0.01
+    type: tp
+  tp: true
